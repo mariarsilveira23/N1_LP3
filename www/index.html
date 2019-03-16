@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>   
+    <head>
+       <script src="js/jquery-3.3.1.min.js"></script>
+       <script src="js/bootstrap.js"></script>
+       <script src="js/bootstrap.bundle.js"></script>
+       <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+        <title>TNYT Movie Reviews</title>
+    </head>
+    <script>
+            $(document).ready(function() {
+                $('[data-toggle="tooltip"]').tooltip();
+                $("#pesquisar-filmes").click(function() {
+                    var displayResources = $("#display-resources");     
+                    var nomeFilme = $("#vlPesquisa").val();   
+                    displayResources.text("Searching...");
+                    $.ajax({
+                    type: "GET",
+                    url: "https://api.nytimes.com/svc/movies/v2/reviews/search.json?query="+nomeFilme+"&api-key=fATSOfRTPxFtHe2dVuZElPGW8RwA1sQu", // Using our resources.json file to serve results
+                    success: function(result) {
+                        console.log(result);
+                        if(result.num_results > 0)
+                        {
+                            var output ="";
+
+                            for (var i in result.results) {
+                            output +=
+
+                            "<div class='col-sm-4' style='margin-top: 2%;'>" +
+                                "<div class='card' style='width: 18rem;'>" +
+                                    "<div class='card-header'>" +
+                                        "<h5 class='card-title'>" + result.results[i].display_title + "</h5>"+
+                                            "<p class='card-subtitle mb-2 text-muted'><i>" + result.results[i].headline + "</i></p>" +
+                                    "</div>" +
+                                    "<div class='card-body'>" +
+                                        "<ul class='list-group list-group-flush'>" +
+                                            "<li class='list-group-item'>" +
+                                                "<p class='card-text'>" + result.results[i].summary_short + "</p>" +
+                                            "</li>" +
+                                        "</ul>" +
+                                    "</div>" +
+                                    "<div class='card-footer'>" +
+                                        "<a href='" + result.results[i].link.url + "' class='card-link'  target='_blank'>" + result.results[i].link.suggested_link_text + "</a>" +
+                                    "</div>" +
+                                "</div>" +
+                            "</div>";          
+                            }        
+                            displayResources.html(output);
+                        }
+                        else
+                        {
+                            var output =
+                            "<span><h4>Sorry!</h4><br/>We didn't find a review for <b>"+ nomeFilme +"</b> =(</span>";
+                            displayResources.html(output);
+                        }
+
+
+                        
+                    }
+                    });
+                });
+            });
+        </script>
+    <body style="background-color: white;">
+       <div class="app">
+            <img src="img/nytLogo.png" style="margin-left: 2%;">
+         <div id="form" style="background-color: #f4f7f9;width: 100%;height: 20%; border-radius: 15px;">
+            <div> 
+                <br/>
+                <center>
+                    <h5>Search for The New York Times movie reviews</h5>
+                </center>   
+            </div>              
+            <div class="input-group" style="width:80%;margin-bottom: 20px;">
+                <input type="text" class="form-control" id="vlPesquisa" placeholder="Movie name" style="margin-left: 20%;" data-toggle="tooltip" data-placement="bottom" title="Please type the name of the movie in English. Ex.: Twilight, The Avengers, etc...">
+                <span class="input-group-btn">
+                    <button id="pesquisar-filmes" type="submit" class="btn btn-primary" style="margin-left: 15%;"><i class="fas fa-search"></i></button>
+                </span>
+            </div>
+           </div>
+           <div id="display-resources" style="margin-top: 2%;margin-left: 2%;"  class="row">
+                                         
+           </div>
+        </div>
+    </body>
+    <footer>
+        <div style="color: #21252996">
+            <span>
+                <center>
+                    Developed by Maria de Fátima Rocha Silveira - 081160042
+                    <br/>
+                    Faculdade de Tecnologia Termomecanica
+                </center>
+            </span>
+        </div>
+    </footer>
+</html>
